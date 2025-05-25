@@ -79,3 +79,4 @@ clinics.html # PB19 - Cơ sở thú y
 ├── index.html # Trang chính (chuyển hướng login)
 ├── package.json # Thông tin dependencies
 └── README.md # Tài liệu mô tả dự án
+\n### Cấu hình Email\nTạo file `.env` với biến `EMAIL_USER` và `EMAIL_PASS` để gửi mã khôi phục mật khẩu.

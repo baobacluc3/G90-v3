@@ -41,20 +41,35 @@
         </div>
 
         <div class="user-actions">
-          <div class="hotline">
-            <i class="bi bi-telephone-fill"></i> 039.556.0056
+          <div class="dropdown">
+            <a
+              href="#"
+              class="text-white d-flex align-items-center"
+              id="userDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li>
+                <a class="dropdown-item" href="/pages/user/profile.html"
+                  >Thông tin cá nhân</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  onclick="localStorage.removeItem('loggedInUser'); window.location.href = '/pages/auth/login.html';"
+                  >Đăng xuất</a
+                >
+              </li>
+            </ul>
           </div>
           <a href="../pages/user/booking.html" class="booking">
             <i class="bi bi-calendar-event"></i> Đặt Lịch
           </a>
-          <!-- <a class="login-btn" href="/index.html">Đăng Nhập</a> -->
-          <a
-            class="logout-btn"
-            href="#"
-            style="display: none"
-            onclick="logoutUser(); window.location.href = '../pages/auth/login.html';"
-            >Đăng Xuất</a
-          >
           <a href="/pages/user/cart.html" class="cart position-relative">
             <i class="bi bi-cart3"></i> Giỏ Hàng
             <span class="cart-count">0</span>

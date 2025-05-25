@@ -59,11 +59,19 @@ header {
   gap: 15px;
 }
 
-.hotline,
 .booking,
 .cart,
 .login-btn,
 .logout-btn {
+  color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+}
+
+.user-actions .dropdown > a {
   color: white;
   font-size: 14px;
   display: flex;

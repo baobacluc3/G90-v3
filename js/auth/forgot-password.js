@@ -1,32 +1,72 @@
-// Tải modal HTML
 fetch('../../components/modal.html')
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById('modalContainer').innerHTML = data;
-    });
+  .then((res) => res.text())
+  .then((html) => {
+    document.getElementById('modalContainer').innerHTML = html;
+  });
 
-function openModal(title, content, onConfirm) {
-    const modal = new bootstrap.Modal(document.getElementById('commonModal'));
-    document.getElementById('commonModalLabel').innerText = title;
-    document.querySelector('.modal-body').innerText = content;
-
-    const confirmBtn = document.getElementById('modalConfirmBtn');
-    confirmBtn.onclick = function () {
-        onConfirm();
-        modal.hide();
-    };
-
-    modal.show();
+function showModal(title, content, onConfirm) {
+  const modal = new bootstrap.Modal(document.getElementById('commonModal'));
+  document.getElementById('commonModalLabel').innerText = title;
+  document.querySelector('#commonModal .modal-body').innerText = content;
+  const btn = document.getElementById('modalConfirmBtn');
+  btn.onclick = () => {
+    if (onConfirm) onConfirm();
+    modal.hide();
+  };
+  modal.show();
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Xử lý form quên mật khẩu
-    document.getElementById('forgotPasswordForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        openModal('Xác Nhận Gửi Liên Kết', `Liên kết đặt lại mật khẩu sẽ được gửi đến ${email}. Bạn có muốn tiếp tục không?`, function () {
-            alert('Liên kết đã được gửi! Vui lòng kiểm tra email.');
-            document.getElementById('forgotPasswordForm').reset();
+document.addEventListener('DOMContentLoaded', () => {
+  const sendForm = document.getElementById('sendCodeForm');
+  const resetForm = document.getElementById('resetForm');
+
+  sendForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    if (!email) return;
+    try {
+      const res = await fetch('/api/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showModal('Thành công', 'Mã xác thực đã được gửi tới email của bạn.');
+        sendForm.style.display = 'none';
+        resetForm.style.display = 'block';
+      } else {
+        showModal('Lỗi', data.message || 'Không thể gửi mã xác thực');
+      }
+    } catch (err) {
+      console.error(err);
+      showModal('Lỗi', 'Không thể kết nối tới máy chủ');
+    }
+  });
+
+  resetForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const code = document.getElementById('code').value.trim();
+    const newPassword = document.getElementById('newPassword').value.trim();
+    if (!code || !newPassword) return;
+    try {
+      const res = await fetch('/api/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, newPassword }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showModal('Thành công', 'Đặt lại mật khẩu thành công', () => {
+          window.location.href = 'login.html';
         });
-    });
+      } else {
+        showModal('Lỗi', data.message || 'Không thể đặt lại mật khẩu');
+      }
+    } catch (err) {
+      console.error(err);
+      showModal('Lỗi', 'Không thể kết nối tới máy chủ');
+    }
+  });
 });
